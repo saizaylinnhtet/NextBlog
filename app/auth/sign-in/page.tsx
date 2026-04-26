@@ -7,15 +7,15 @@ import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState, useRef, useEffect } from 'react'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-import { SignUpFormData, SignUpResult } from '@/lib/type'
-import { signUpSchema } from '@/lib/schema'
-import { signup } from '@/lib/auth'
+import { SignInFormData, SignUpFormData, SignUpResult } from '@/lib/type'
+import { signInSchema } from '@/lib/schema'
+import { signin, signup } from '@/lib/auth'
 import { setTimeout } from 'timers/promises'
 import SignUpModel from '@/components/models/sign-up-model'
 
-const Signup = () => {
+const Signin = () => {
 
-  const [signUpMessage, setSignUpMessage] = useState('')
+  const [signInMessage, setSignInMessage] = useState('')
   const timeoutRef = useRef<number| null>(null)
 
   const {
@@ -24,11 +24,10 @@ const Signup = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
-      name: "",
       password: ""
     }
   })
@@ -39,43 +38,30 @@ const Signup = () => {
     }
   }, [])
 
-  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
-    const result = await signup(data)
+  const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
+    const result = await signin(data)
     if (!result) return
 
     const { success, message }: SignUpResult = result
     if (success === false) {
-      setSignUpMessage(message)
+      setSignInMessage(message)
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = window.setTimeout(() => setSignUpMessage(''), 4000)
+      timeoutRef.current = window.setTimeout(() => setSignInMessage(''), 4000)
     }
     reset()
   }
 
   return (
     <div className='relative'>
-      {signUpMessage && <SignUpModel message={signUpMessage} />}
+      {signInMessage && <SignUpModel message={signInMessage} />}
       <Card className='rounded'>
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create new account</CardDescription>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>Login to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Full Name</FieldLabel>
-                    <Input className="rounded" aria-invalid={fieldState.invalid} placeholder='John Doe' {...field} />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
               <Controller
                 name="email"
                 control={control}
@@ -83,9 +69,6 @@ const Signup = () => {
                   <Field>
                     <FieldLabel>Email</FieldLabel>
                     <Input className="rounded" aria-invalid={fieldState.invalid} placeholder='johndoe@gmail.com' {...field} />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
                   </Field>
                 )}
               />
@@ -95,14 +78,11 @@ const Signup = () => {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Password</FieldLabel>
-                    <Input className="rounded" aria-invalid={fieldState.invalid} placeholder='********' type='password' {...field} />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    <Input className="rounded" aria-invalid={fieldState.invalid} placeholder='********' type='password' {...field} />                    
                   </Field>
                 )}
               />
-              <Button type="submit" className="rounded">Sign Up</Button>
+              <Button type="submit" className="rounded">Login</Button>
             </FieldGroup>
           </form>
         </CardContent>
@@ -112,4 +92,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Signin

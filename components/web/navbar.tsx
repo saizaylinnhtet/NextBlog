@@ -28,7 +28,7 @@ const Navbar = () => {
             </div>
             <div className='flex items-center gap-2'>
                 <Link href='/auth/sign-up' className={cn(buttonVariants(), "p-5 rounded")}>Sign up</Link>
-                <Link href='/auth/login' className={cn(buttonVariants({variant: "secondary"}), "p-5 rounded")}>Login</Link>
+                <Link href='/auth/sign-in' className={cn(buttonVariants({variant: "secondary"}), "p-5 rounded")}>Login</Link>
                 <ThemeToggle />
             </div>
         </nav>

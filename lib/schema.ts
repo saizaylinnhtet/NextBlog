@@ -9,3 +9,8 @@ export const signUpSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(30, "Password must be at most 30 characters"),
 });
+
+export const signInSchema = z.object({
+  email: z.email("Please enter a valid email address"),
+  password: z.string(),
+});
