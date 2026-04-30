@@ -6,6 +6,7 @@ import { comparePassword, generateHashPassword, generateSessionToken } from "./p
 import { SignInFormData, SignInResult, SignUpFormData } from "./type";
 import { prisma } from "@/lib/prisma"
 import { SignUpResult } from "./type";
+import { cookies } from "next/headers";
 
 export async function signup(formData: SignUpFormData): Promise<SignUpResult | undefined> {
     const existingUser = await prisma.user.findUnique({
@@ -91,4 +92,14 @@ export async function signin(formData: SignInFormData): Promise<SignInResult | u
     }
     redirect('/')
     
+}
+
+export async function logout() {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("session_token")?.value
+    if (token) {
+        await prisma.session.delete({ where: { token } })
+        cookieStore.delete("session_token")
+    }
+    redirect("/auth/sign-in")
 }

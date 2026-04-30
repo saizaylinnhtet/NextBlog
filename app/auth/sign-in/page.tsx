@@ -12,6 +12,7 @@ import { signInSchema } from '@/lib/schema'
 import { signin, signup } from '@/lib/auth'
 import { setTimeout } from 'timers/promises'
 import SignUpModel from '@/components/models/sign-up-model'
+import Link from 'next/link'
 
 const Signin = () => {
 
@@ -87,6 +88,7 @@ const Signin = () => {
           </form>
         </CardContent>
       </Card>
+      <div className='mt-5 text-center text-sm'>Don't you have account? Go to <Link href='/auth/sign-up' className='text-blue-500'>Sign Up</Link></div>
     </div>
 
   )

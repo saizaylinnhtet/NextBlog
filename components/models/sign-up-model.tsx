@@ -2,7 +2,10 @@ import React from 'react'
 
 const SignUpModel = ({ message }: { message: string }) => {
   return (
-    <div className='absolute top-0 left-50 transform translate-x-[-50%] px-10 py-5'>{message}</div>
+    <div className='absolute w-[70%] left-[50%] translate-x-[-50%] translate-y-[-70%] transform py-3
+     bg-red-500 text-white text-center rounded-xl'>
+      {message}
+    </div>
   )
 }
 

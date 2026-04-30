@@ -1,10 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import { Button, buttonVariants } from '../ui/button'
-import { cn } from '@/lib/utils'
-import { ThemeToggle } from './theme-toggle'
+import NavButtons from './navbuttons'
 
 const Navbar = () => {
+
     return (
         <nav className='w-full py-3 flex items-center justify-between'>
             <div className='w-full flex items-center relative'>
@@ -26,11 +25,7 @@ const Navbar = () => {
                 </ul>
 
             </div>
-            <div className='flex items-center gap-2'>
-                <Link href='/auth/sign-up' className={cn(buttonVariants(), "p-5 rounded")}>Sign up</Link>
-                <Link href='/auth/sign-in' className={cn(buttonVariants({variant: "secondary"}), "p-5 rounded")}>Login</Link>
-                <ThemeToggle />
-            </div>
+            <NavButtons />
         </nav>
 
     )
