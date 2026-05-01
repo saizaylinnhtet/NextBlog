@@ -24,7 +24,7 @@ const Signup = () => {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -103,7 +103,9 @@ const Signup = () => {
                   </Field>
                 )}
               />
-              <Button type="submit" className="rounded">Sign Up</Button>
+              <Button type="submit" className="rounded">
+                {isSubmitting ? 'Signing up...' : 'Sign Up'}
+              </Button>
             </FieldGroup>
           </form>
         </CardContent>

@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { signInSchema, signUpSchema } from '@/lib/schema'
+import { createBlogSchema, signInSchema, signUpSchema } from '@/lib/schema'
 import { Session, User } from "@/generated/prisma/client"
 
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
 export type SignInFormData = z.infer<typeof signInSchema>;
+export type CreateBlogFormData = z.infer<typeof createBlogSchema>;
 
 export type SignUpResult = {
     success: boolean

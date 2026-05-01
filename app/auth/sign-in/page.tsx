@@ -24,7 +24,7 @@ const Signin = () => {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -83,7 +83,9 @@ const Signin = () => {
                   </Field>
                 )}
               />
-              <Button type="submit" className="rounded">Login</Button>
+              <Button type="submit" className="rounded">
+                {isSubmitting ? 'Logging in...' : 'Login'}
+              </Button>
             </FieldGroup>
           </form>
         </CardContent>

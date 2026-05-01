@@ -20,6 +20,7 @@ model User {
   address   String?
   createdAt DateTime  @default(now())
   sessions  Session[]
+  blogs     Blog[]
 }
 
 model Session {
@@ -29,4 +30,15 @@ model Session {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   expiredAt DateTime
+}
+
+model Blog {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  images    String[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
 }
