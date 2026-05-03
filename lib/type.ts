@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createBlogSchema, signInSchema, signUpSchema } from '@/lib/schema'
-import { Session, User } from "@/generated/prisma/client"
+import { Session, User, Blog } from "@/generated/prisma/client"
 
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
@@ -16,3 +16,5 @@ export type SignUpResult = {
 export type SignInResult = SignUpResult
 
 export type checkCookieType = Session & { user: Pick<User, "id" | "name" | "email"> } | null
+
+export type uploadBlogType = Pick<Blog, "title" | "content" | "images">

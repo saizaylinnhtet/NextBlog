@@ -31,6 +31,7 @@ import {
     InputGroupText,
     InputGroupTextarea,
 } from "@/components/ui/input-group"
+import { useSession } from '@/contexts/session-context'
 const Create = () => {
     const {
         control,
@@ -45,9 +46,28 @@ const Create = () => {
             images: [],
         },
     })
+    const session = useSession()
 
-    const onSubmit: SubmitHandler<CreateBlogFormData> = (data) => {
-        console.log(data)
+    const onSubmit: SubmitHandler<CreateBlogFormData> = async (data) => {
+        const uploadedUrls: string[] = []
+        for (const file of data.images ?? []) {
+            const formData = new FormData()
+            formData.append("file", file)
+            const res = await fetch("/api/image/upload", { method: "POST", body: formData })
+            const result = await res.json()
+            uploadedUrls.push(result.secure_url)
+        }
+        const res = await fetch("/api/blog/create", {
+            method: "POST",
+            body: JSON.stringify({ ...data, images: uploadedUrls, userId: session?.userId }),
+        })
+        if (!res.ok) {
+            await fetch("/api/image/delete", {
+                method: "DELETE",
+                body: JSON.stringify({ urls: uploadedUrls }),
+            })
+        }
+        reset()
     }
 
     return (
@@ -76,6 +96,7 @@ const Create = () => {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="AI is the future"
                                             autoComplete="off"
+                                            disabled={isSubmitting}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
@@ -99,6 +120,7 @@ const Create = () => {
                                                 rows={6}
                                                 className="min-h-24 resize-none"
                                                 aria-invalid={fieldState.invalid}
+                                                disabled={isSubmitting}
                                             />
                                             <InputGroupAddon align="block-end">
                                                 <InputGroupText className="tabular-nums">
@@ -148,6 +170,7 @@ const Create = () => {
                                                     {/* delete button */}
                                                     <button
                                                         type="button"
+                                                        disabled={isSubmitting}
                                                         onClick={() => onChange(value.filter((_: File, i: number) => i !== index))}
                                                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5"
                                                     >
@@ -158,7 +181,7 @@ const Create = () => {
 
                                             {/* add button */}
                                             <label
-                                                htmlFor="image-upload"
+                                                htmlFor={isSubmitting ? undefined : "image-upload"}
                                                 className="h-24 w-24 flex items-center justify-center border-2 border-dashed rounded-md cursor-pointer hover:bg-muted"
                                             >
                                                 <Plus size={24} />
@@ -174,11 +197,11 @@ const Create = () => {
                 </CardContent>
                 <CardFooter>
                     <Field orientation="horizontal">
-                        <Button type="button" variant="outline" onClick={() => reset()}>
+                        <Button disabled={isSubmitting} type="button" variant="outline" onClick={() => reset()}>
                             Reset
                         </Button>
                         <Button type="submit" form="form-rhf-demo">
-                            Create
+                            {isSubmitting ? "Creating..." : "Create"}
                         </Button>
                     </Field>
                 </CardFooter>

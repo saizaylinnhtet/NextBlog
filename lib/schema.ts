@@ -17,6 +17,6 @@ export const signInSchema = z.object({
 
 export const createBlogSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
-  content: z.string().min(10, "Content must be at least 10 characters").max(500, "Content should not exceed 100 characters"),
+  content: z.string().max(500, "Content should not exceed 100 characters"),
   images: z.array(z.instanceof(File)).optional(),
 });
