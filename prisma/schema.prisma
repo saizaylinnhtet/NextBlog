@@ -13,14 +13,16 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
+  id        Int            @id @default(autoincrement())
+  email     String         @unique
   name      String
   password  String
   address   String?
-  createdAt DateTime  @default(now())
+  createdAt DateTime       @default(now())
   sessions  Session[]
   blogs     Blog[]
+  comments  Comment[]
+  reactions BlogReaction[]
 }
 
 model Session {
@@ -33,12 +35,53 @@ model Session {
 }
 
 model Blog {
-  id        Int       @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   title     String
   content   String
   images    String[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
+  reactions BlogReaction[]
+  comments  Comment[]
+}
+
+enum CommentLvlType {
+  MAIN
+  SUB
+}
+
+model Comment {
+  id         Int            @id @default(autoincrement())
+  userId     Int
+  user       User           @relation(fields: [userId], references: [id])
+  blogId     Int
+  blog       Blog           @relation(fields: [blogId], references: [id])
+  message    String
+  commentLvl CommentLvlType @default(MAIN)
+  createdAt  DateTime       @default(now())
+  parentId   Int?
+  parent     Comment?       @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[]      @relation("CommentReplies")
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
+}
+
+model BlogReaction {
+  id     Int          @id @default(autoincrement())
+  blogId Int
+  blog   Blog         @relation(fields: [blogId], references: [id])
+  userId Int
+  user   User         @relation(fields: [userId], references: [id])
+  type   ReactionType
+
+  @@unique([blogId, userId]) // user can only have ONE reaction type at a time
 }

@@ -32,6 +32,7 @@ import {
     InputGroupTextarea,
 } from "@/components/ui/input-group"
 import { useSession } from '@/contexts/session-context'
+import { Spinner } from '@/components/ui/spinner'
 const Create = () => {
     const {
         control,
@@ -200,8 +201,8 @@ const Create = () => {
                         <Button disabled={isSubmitting} type="button" variant="outline" onClick={() => reset()}>
                             Reset
                         </Button>
-                        <Button type="submit" form="form-rhf-demo">
-                            {isSubmitting ? "Creating..." : "Create"}
+                        <Button className="w-[80px]" type="submit" form="form-rhf-demo">
+                            {isSubmitting ? <Spinner /> : "Create"}
                         </Button>
                     </Field>
                 </CardFooter>
