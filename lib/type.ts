@@ -25,4 +25,4 @@ export type BlogWithRelationsType = Blog & {
     comments: Pick<Comment, "id">[]
   }
 
-export type { BlogReaction, ReactionType } from "@/generated/prisma/client"
+export type { BlogReaction, ReactionType, Comment } from "@/generated/prisma/client"

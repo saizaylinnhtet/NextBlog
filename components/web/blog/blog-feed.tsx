@@ -2,9 +2,11 @@ import { BlogWithRelationsType } from "@/lib/type"
 import BlogCard from "./blog-card"
 import { checkCookie } from "@/lib/cookie"
 import { redirect } from "next/navigation"
+import { Pagination } from "./blog-pagination"
 
 
-export default async function BlogFeed({ blogs }: { blogs: BlogWithRelationsType[] }) {
+export const BlogFeed = async ({ blogs, page, totalPages }:
+  { blogs: BlogWithRelationsType[], page: number, totalPages: number }) => {
 
   const session = await checkCookie()
   if (!session) redirect("/auth/sign-in")
@@ -18,10 +20,15 @@ export default async function BlogFeed({ blogs }: { blogs: BlogWithRelationsType
   }
 
   return (
-    <div className="flex flex-col gap-8 px-2 py-10 max-w-150 m-auto">
-      {blogs.map(blog => (
-        <BlogCard key={blog.id} blog={blog} currentUserId={session.userId}/>
-      ))}
-    </div>
+    <div>
+      <div className="flex flex-col gap-8 px-2 py-10 max-w-150 w-full m-auto">
+        {blogs.map(blog => (
+          <BlogCard key={blog.id} blog={blog} currentUserId={session.userId} />
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <Pagination page={page} totalPages={totalPages} />
+    </div >
   )
 }

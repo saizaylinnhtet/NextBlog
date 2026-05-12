@@ -17,6 +17,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import BlogComment from "./blog-comment"
 
 function timeAgo(date: Date | string) {
     const diff = (Date.now() - new Date(date).getTime()) / 1000
@@ -30,6 +31,7 @@ const BlogCard = ({ blog, currentUserId }: { blog: BlogWithRelationsType, curren
     const [reaction, setReaction] = useState<ReactionType | null>(
         blog.reactions.find(r => r.userId === currentUserId)?.type ?? null
     )
+    const [commentCount, setCommentCount] = useState(blog.comments.length)
     const [reactions, setReactions] = useState<BlogReaction[]>(blog.reactions)
     const [showPicker, setShowPicker] = useState(false)
 
@@ -57,7 +59,7 @@ const BlogCard = ({ blog, currentUserId }: { blog: BlogWithRelationsType, curren
     }
 
     return (
-        <article className="rounded-sm shadow-sm">
+        <article className="rounded-sm shadow-sm overflow-hidden w-full">
 
             {/* Header */}
             <div className="flex items-center gap-3 px-4 pt-4">
@@ -91,14 +93,21 @@ const BlogCard = ({ blog, currentUserId }: { blog: BlogWithRelationsType, curren
                         <Dialog>
                             <DialogTrigger><ReactionSummary reactions={reactions} /></DialogTrigger>
                             <DialogContent>
-                                <ReactionDetailModal blogId={blog.id} reactions={reactions}/>
+                                <ReactionDetailModal blogId={blog.id} reactions={reactions} />
                             </DialogContent>
                         </Dialog>
-                        {blog.comments.length > 0 && (
-                            <span className="text-xs text-muted-foreground">
-                                {blog.comments.length} comment{blog.comments.length !== 1 ? "s" : ""}
-                            </span>
-                        )}
+                        {commentCount > 0 && 
+                        (<Dialog>
+                            <DialogTrigger asChild>
+                                <span className="text-xs text-muted-foreground cursor-pointer">
+                                    {commentCount} comment{commentCount !== 1 ? "s" : ""}
+                                </span>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <BlogComment blogId={blog.id} currentUserId={currentUserId} onCommentAdded={() => setCommentCount(c => c + 1)} />
+                            </DialogContent>
+                        </Dialog>)
+                        }
                     </div>
                     <Separator className="mx-4" />
                 </>
@@ -139,10 +148,17 @@ const BlogCard = ({ blog, currentUserId }: { blog: BlogWithRelationsType, curren
                 </div>
 
                 {/* Comment button */}
-                <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground rounded-sm">
-                    <MessageCircle size={18} />
-                    <span>Comment</span>
-                </Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground rounded-sm">
+                            <MessageCircle size={18} />
+                            <span>Comment</span>
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <BlogComment blogId={blog.id} currentUserId={currentUserId} onCommentAdded={() => setCommentCount(c => c + 1)} />
+                    </DialogContent>
+                </Dialog>
 
                 {/* Share button */}
                 <Button variant="ghost" className="flex-1 gap-2 text-muted-foreground rounded-sm">

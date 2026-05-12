@@ -32,7 +32,7 @@ const ReactionDetailModal = ({ blogId, reactions }: { blogId: number, reactions:
                 <DialogTitle>Reactions</DialogTitle>
             </DialogHeader>
             <Tabs defaultValue={reactionTypes[0]}>
-                <TabsList variant="line" className="flex flex-wrap justify-evenly w-full">
+                <TabsList className="flex flex-wrap justify-evenly w-full">
                     {reactionTypes.map((type) => (
                         <span key={type} className="scale-150">
                             <TabsTrigger value={type}>
@@ -45,20 +45,21 @@ const ReactionDetailModal = ({ blogId, reactions }: { blogId: number, reactions:
                 {reactionTypes.map((type) => (
                     <TabsContent key={type + '-tabContent'} value={type}>
                         <Card>
-                            <CardContent className="flex flex-col gap-2">
+                            <CardContent className="flex flex-col">
                                 {loading ? (
                                     <p className="text-sm text-muted-foreground">Loading...</p>
                                 ) : (
                                     reactionDetails
                                         .filter(r => r.type === type)
                                         .map((r, index, arr) => (
-                                            <Fragment key={r.id}>
+                                            <div key={r.id}>
+                                                {index === 0 && <div className="mt-4"/>}
                                                 <div className="flex items-center gap-3">
                                                     <Avatar name={r.user.name} size={30} />
                                                     <span className="text-sm">{r.user.name}</span>
                                                 </div>
-                                                {index !== arr.length - 1 && <hr />}
-                                            </Fragment>
+                                                {index !== arr.length - 1 && <hr className="my-2"/>}
+                                            </div>
                                         ))
                                 )}
                             </CardContent>

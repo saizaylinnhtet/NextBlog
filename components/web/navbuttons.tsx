@@ -28,7 +28,9 @@ const NavButtons = () => {
         <div className='flex items-center gap-2'>
             {session ? (
                 <AlertDialog>
-                    <AlertDialogTrigger render={<Button variant="outline">Logout</Button>} />
+                    <AlertDialogTrigger asChild>
+                        <Button className={cn(buttonVariants({ variant: "secondary" }), "p-5 rounded")}>Logout</Button>
+                    </AlertDialogTrigger> 
                     <AlertDialogContent>
                         <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
@@ -39,7 +41,7 @@ const NavButtons = () => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={()=> logout()} className='bg-red-500 text-white!'>Logout</AlertDialogAction>
+                            <AlertDialogAction onClick={()=> logout()} className=' bg-red-500 text-white!'>Logout</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
